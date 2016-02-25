@@ -40,7 +40,8 @@ extern SoftwareSerial mp3;
 
 
 void SelectPlayerDevice(uint8_t device);
-void SpecifyMusicPlay(uint8_t hbyte,uint8_t lbyte);
+void SpecifyMusicPlay(uint16_t index);
+void SpecifyfolderPlay(uint8_t folder, uint8_t index);
 void PlayPause(void);
 void PlayResume(void);
 void PlayNext(void);
@@ -49,6 +50,7 @@ void PlayLoop(void);
 void SetVolume(uint8_t volume);
 void IncreaseVolume(void);
 void DecreaseVolume(void);
+uint8_t QueryPlayStatus(void);
 void printReturnedData(void);
 
 

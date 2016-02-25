@@ -62,7 +62,7 @@ void loop()
     switch (recvChar)
     {
         case '1':
-            SpecifyMusicPlay(0, 1);
+            SpecifyMusicPlay(1);
             Serial.println("Specify the music index to play");
             break;
         case '2':

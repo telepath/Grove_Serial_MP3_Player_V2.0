@@ -60,18 +60,41 @@ void SelectPlayerDevice(uint8_t device)
 /**************************************************************** 
  * Function Name: SpecifyMusicPlay
  * Description: Specify the music index to play, the index is decided by the input sequence of the music.
- * Parameters: hbyte: the high byte of the index;  lbyte: the low byte of the index.
+ * Parameters: index: the music index: 0-65535.
  * Return: none
 ****************************************************************/ 
-void SpecifyMusicPlay(uint8_t hbyte,uint8_t lbyte)
+void SpecifyMusicPlay(uint16_t index)
 {
+    uint8_t hbyte, lbyte;
+    hbyte = index / 256;
+    lbyte = index % 256;
     mp3.write(0x7E);
     mp3.write(0xFF);
     mp3.write(0x06);
     mp3.write(0x03);
     mp3.write(uint8_t(0x00));
-    mp3.write(hbyte);
-    mp3.write(lbyte);
+    mp3.write(uint8_t(hbyte));
+    mp3.write(uint8_t(lbyte));
+    mp3.write(0xEF);
+    delay(10);
+//  return true;
+}
+
+/**************************************************************** 
+ * Function Name: SpecifyfolderPlay
+ * Description: Specify the music index in the folder to play, the index is decided by the input sequence of the music.
+ * Parameters: folder: folder name, must be number;  index: the music index.
+ * Return: none
+****************************************************************/ 
+void SpecifyfolderPlay(uint8_t folder, uint8_t index)
+{
+    mp3.write(0x7E);
+    mp3.write(0xFF);
+    mp3.write(0x06);
+    mp3.write(0x0F);
+    mp3.write(uint8_t(0x00));
+    mp3.write(uint8_t(folder));
+    mp3.write(uint8_t(index));
     mp3.write(0xEF);
     delay(10);
 //  return true;
@@ -259,4 +282,32 @@ void printReturnedData(void)
         Serial.print(" ");
     }
     Serial.println(" "); 
+}
+
+/**************************************************************** 
+ * Function Name: QueryPlayStatus
+ * Description: Query play status.
+ * Parameters: none
+ * Return: 0: played out; 1: other.
+ * Usage: while(QueryPlayStatus() != 0);  // Waiting to play out.
+****************************************************************/ 
+uint8_t QueryPlayStatus(void)
+{
+    unsigned char c[10] = {0};
+    uint8_t i = 0;
+    //check if there's any data sent from the Grove_Serial_MP3_Player
+    while(mp3.available())
+    {
+        c[i] = mp3.read();
+        i++;
+    }
+    
+    if(c[3] == 0x3C || c[3] == 0x3D || c[3] == 0x3E)
+    {
+        return 0;
+    }
+    else
+    {
+        return 1;
+    }
 }
