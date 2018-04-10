@@ -1,11 +1,15 @@
 Grove – Serial MP3 Player V2.0
 --------------------------------
 
+<img src=https://statics3.seeedstudio.com/images/product/107020008%202.jpg width=300><img src=https://statics3.seeedstudio.com/product/107020008%202_02.jpg width=300>
+
+[Grove - MP3 v2.0](https://www.seeedstudio.com/Grove-MP3-v2.0-p-2597.html)
 
 The MP3 chip of Grove-Serial MP3 Player V2.0 is different from Grove-Serial MP3 Player V1.0.
 Grove-Serial MP3 Player V2.0 is a kind of simple MP3 player device whose design is based on a high-quality MP3 audio chip---KT403A. 
 
-    
+For more information please visit [wiki](http://wiki.seeedstudio.com/Grove-MP3_v2.0/).    
+
 ----
 
 This demo is licensed under [The MIT License](http://opensource.org/licenses/mit-license.php). Check License.txt for more information.<br>
