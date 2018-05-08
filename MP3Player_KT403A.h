@@ -33,12 +33,11 @@
 #ifndef __MP3PLAYER_KT403A_H__
 #define __MP3PLAYER_KT403A_H__
 
-
 #include <SoftwareSerial.h>
 
 extern SoftwareSerial mp3;
 
-
+void PlayMP3folder(uint16_t index);
 void SelectPlayerDevice(uint8_t device);
 void SpecifyMusicPlay(uint16_t index);
 void SpecifyfolderPlay(uint8_t folder, uint8_t index);

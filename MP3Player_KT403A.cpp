@@ -80,6 +80,31 @@ void SpecifyMusicPlay(uint16_t index)
 //  return true;
 }
 
+/*************************************************************
+ * Function Name: PlayMP3folder
+ * Description: Plays the music specified in the MP3 folder.
+ *              First create a folder named MP3. Then rename the music file to 0001.mp3,0002.mp3, and so on. Save these music files in the MP3 folder.
+ *              The name must be Decimal. 
+ * Parameters: index, the name of MP3 flie.
+ * Return: none
+**************************************************************/
+void PlayMP3folder(uint16_t index)
+{
+    uint8_t hbyte, lbyte;
+    hbyte = index / 256;
+    lbyte = index % 256;
+    mp3.write(0x7E);
+    mp3.write(0xFF);
+    mp3.write(0x06);
+    mp3.write(0x12);
+    mp3.write(uint8_t(0x00));
+    mp3.write(uint8_t(hbyte));
+    mp3.write(uint8_t(lbyte));
+    mp3.write(0xEF);
+    delay(10);
+//  return true;
+}
+
 /**************************************************************** 
  * Function Name: SpecifyfolderPlay
  * Description: Specify the music index in the folder to play, the index is decided by the input sequence of the music.
