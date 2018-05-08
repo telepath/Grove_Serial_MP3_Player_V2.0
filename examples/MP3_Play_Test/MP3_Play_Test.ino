@@ -35,6 +35,9 @@
 #include <SoftwareSerial.h>
 #include <MP3Player_KT403A.h>
 
+static uint8_t recv_cmd[8] = {};
+
+
 // Note: You must define a SoftwareSerial class object that the name must be mp3, 
 //       but you can change the pin number according to the actual situation.
 SoftwareSerial mp3(2, 3);
@@ -43,6 +46,23 @@ void setup()
 {
     mp3.begin(9600);
     Serial.begin(9600); 
+    
+    while(!Serial);
+
+    Serial.println("Grove - Serial MP3 Demo");
+    Serial.println(
+        "Input command:\r\n\r\n"
+        "P[ ] play music by default index\r\n"
+        "Pm[ ] play music in MP3 folder by index\r\n"
+        "Pf[ ][ ] play music by specify folder and index\r\n"        
+        "p Pause\r\n"
+        "R Resume\r\n"
+        "N Next\r\n"
+        "L Previous\r\n"
+        "l Loop\r\n"
+        "I Increase volume\r\n"
+        "D Decrease volumern\r\n");
+    
     delay(100);
     
     SelectPlayerDevice(0x02);       // Select SD card as the player device.
@@ -51,53 +71,113 @@ void setup()
 
 void loop()
 {
-    char recvChar = 0;
-    while(Serial.available())
+    uint8_t len = 0;
+    uint8_t i;
+
+    if(Serial.available())
     {
-        recvChar = Serial.read();
+        char chr = '\0';
+        while(chr != '\n')  // Blockly read data from serial monitor
+        {
+            chr = Serial.read();
+            // Serial.print(chr);
+            recv_cmd[len++] = chr;        
+        }
     }
-    Serial.print("Send: ");
-    Serial.println( recvChar );
-    
-    switch (recvChar)
+
+    if(len > 0)
     {
-        case '1':
-            SpecifyMusicPlay(1);
-            Serial.println("Specify the music index to play");
-            break;
-        case '2':
-            PlayPause();
-            Serial.println("Pause the MP3 player");
-            break;
-        case '3':
-            PlayResume();
-            Serial.println("Resume the MP3 player");
-            break;
-        case '4':
-            PlayNext();
-            Serial.println("Play the next song");
-            break;
-        case '5':
-            PlayPrevious();
-            Serial.println("Play the previous song");
-            break;
-        case '6':
-            PlayLoop();
-            Serial.println("Play loop for all the songs");
-            break;
-        case '7':
-            IncreaseVolume();
-            Serial.println("Increase volume");
-            break;
-        case '8':
-            DecreaseVolume();
-            Serial.println("Decrease volume");
-            break;
-        default:
-            break;
-    }
-    
-    delay(1000);
+        // Print reveiced data    
+        // Serial.print("Received cmd: ");   
+        // for(i = 0; i < len; i++) {
+        //     Serial.print(recv_cmd[i]);
+        //     Serial.print(" ");
+        // }
+        // Serial.println();
+            
+        switch (recv_cmd[0])
+        {
+            case 'P':
+                if(recv_cmd[1] == 'm') 
+                {
+                    /** 
+                      * Play music in "MP3" folder by index 
+                      * example:
+                      * "Pm1" -> ./MP3/0001.mp3
+                    */
+                    PlayMP3folder(recv_cmd[2] - '0');
+                    Serial.print("Play ");
+                    Serial.write(recv_cmd[2]);
+                    Serial.println(".mp3 in MP3 folder");
+                } 
+                else if(recv_cmd[1] == 'f')
+                {
+                    /** 
+                      * Play specify folder and music
+                      * example:
+                      * "Pf11" -> ./01/001***.mp3
+                    */
+                    SpecifyfolderPlay(recv_cmd[2] - '0',recv_cmd[3] - '0');
+                    Serial.print("Play ");
+                    Serial.write(recv_cmd[3]);
+                    Serial.print("xxx.mp3");
+                    Serial.print(" in folder ");
+                    Serial.write(recv_cmd[2]);
+                    Serial.println();
+                    
+                } 
+                else
+                {
+                    /** 
+                      * Play music by default index
+                      * example:
+                      * "P1" -> ./***.mp3
+                    */                
+                    SpecifyMusicPlay(recv_cmd[1] - '0');
+                    Serial.print("Play xxx.MP3 by index ");
+                    Serial.write(recv_cmd[1]);
+                    Serial.println();
+                }            
+                // Serial.println("Specify the music index to play");
+                break;
+            case 'p':
+                PlayPause();            
+                Serial.println("Pause the MP3 player");
+                break;
+            case 'R':            
+                PlayResume();
+                Serial.println("Resume the MP3 player");
+                break;
+            case 'N':            
+                PlayNext();
+                Serial.println("Play the next song");
+                break;
+            case 'L':
+                PlayPrevious();
+                Serial.println("Play the previous song");
+                break;
+            case 'l':
+                PlayLoop();
+                Serial.println("Play loop for all the songs");
+                break;
+            case 'I':
+                IncreaseVolume();
+                Serial.println("Increase volume");
+                break;
+            case 'D':
+                DecreaseVolume();
+                Serial.println("Decrease volume");
+                break;
+            default:
+                break;
+        }
+
+        // clean data buffer
+        for(i = 0; i < sizeof(recv_cmd); i++) {
+            recv_cmd[i] = '\0';
+        }
+    }    
+    delay(100);
     
 //    printReturnedData();
 }
