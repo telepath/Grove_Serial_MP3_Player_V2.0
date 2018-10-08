@@ -7,7 +7,7 @@
  * Author     : Wuruibin
  * Created Time: Dec 2015
  * Modified Time:
- * 
+ *
  * The MIT License (MIT)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -28,23 +28,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
- 
+
 #include <Arduino.h>
 #include "MP3Player_KT403A.h"
 
 
-// Note: You must define a SoftwareSerial class object that the name must be mp3, 
-//       but you can change the pin number according to the actual situation.
-//SoftwareSerial mp3(2, 3);         // define in the demo file 
+MP3Player::MP3Player (int receivePin, int transmitPin, uint8_t playerDevice = 0x00){
+  mp3 = SoftwareSerial(receivePin,transmitPin);
+  if (playerDevice != 0x00) {
+    SelectPlayerDevice(playerDevice);
+  }
+}
 
 
-/**************************************************************** 
+/****************************************************************
  * Function Name: SelectPlayerDevice
  * Description: Select the player device, U DISK or SD card.
  * Parameters: 0x01:U DISK;  0x02:SD card
  * Return: none
-****************************************************************/ 
-void SelectPlayerDevice(uint8_t device)
+****************************************************************/
+void MP3Player::SelectPlayerDevice(uint8_t device)
 {
     mp3.write(0x7E);
     mp3.write(0xFF);
@@ -57,13 +60,13 @@ void SelectPlayerDevice(uint8_t device)
     delay(200);
 }
 
-/**************************************************************** 
+/****************************************************************
  * Function Name: SpecifyMusicPlay
  * Description: Specify the music index to play, the index is decided by the input sequence of the music.
  * Parameters: index: the music index: 0-65535.
  * Return: none
-****************************************************************/ 
-void SpecifyMusicPlay(uint16_t index)
+****************************************************************/
+void MP3Player::SpecifyMusicPlay(uint16_t index)
 {
     uint8_t hbyte, lbyte;
     hbyte = index / 256;
@@ -84,11 +87,11 @@ void SpecifyMusicPlay(uint16_t index)
  * Function Name: PlayMP3folder
  * Description: Plays the music specified in the MP3 folder.
  *              First create a folder named MP3. Then rename the music file to 0001.mp3,0002.mp3, and so on. Save these music files in the MP3 folder.
- *              The name must be Decimal. 
+ *              The name must be Decimal.
  * Parameters: index, the name of MP3 flie.
  * Return: none
 **************************************************************/
-void PlayMP3folder(uint16_t index)
+void MP3Player::PlayMP3folder(uint16_t index)
 {
     uint8_t hbyte, lbyte;
     hbyte = index / 256;
@@ -105,13 +108,13 @@ void PlayMP3folder(uint16_t index)
 //  return true;
 }
 
-/**************************************************************** 
+/****************************************************************
  * Function Name: SpecifyfolderPlay
  * Description: Specify the music index in the folder to play, the index is decided by the input sequence of the music.
  * Parameters: folder: folder name, must be number;  index: the music index.
  * Return: none
-****************************************************************/ 
-void SpecifyfolderPlay(uint8_t folder, uint8_t index)
+****************************************************************/
+void MP3Player::SpecifyfolderPlay(uint8_t folder, uint8_t index)
 {
     mp3.write(0x7E);
     mp3.write(0xFF);
@@ -125,13 +128,13 @@ void SpecifyfolderPlay(uint8_t folder, uint8_t index)
 //  return true;
 }
 
-/**************************************************************** 
+/****************************************************************
  * Function Name: PlayPause
  * Description: Pause the MP3 player.
  * Parameters: none
  * Return: none
-****************************************************************/ 
-void PlayPause(void)
+****************************************************************/
+void MP3Player::PlayPause(void)
 {
     mp3.write(0x7E);
     mp3.write(0xFF);
@@ -147,13 +150,13 @@ void PlayPause(void)
 //  return true;
 }
 
-/**************************************************************** 
+/****************************************************************
  * Function Name: PlayResume
  * Description: Resume the MP3 player.
  * Parameters: none
  * Return: none
-****************************************************************/ 
-void PlayResume(void)
+****************************************************************/
+void MP3Player::PlayResume(void)
 {
     mp3.write(0x7E);
     mp3.write(0xFF);
@@ -169,13 +172,13 @@ void PlayResume(void)
 //  return true;
 }
 
-/**************************************************************** 
+/****************************************************************
  * Function Name: PlayNext
  * Description: Play the next song.
  * Parameters: none
  * Return: none
-****************************************************************/ 
-void PlayNext(void)
+****************************************************************/
+void MP3Player::PlayNext(void)
 {
     mp3.write(0x7E);
     mp3.write(0xFF);
@@ -189,13 +192,13 @@ void PlayNext(void)
 //  return true;
 }
 
-/**************************************************************** 
+/****************************************************************
  * Function Name: PlayPrevious
  * Description: Play the previous song.
  * Parameters: none
  * Return: none
-****************************************************************/ 
-void PlayPrevious(void)
+****************************************************************/
+void MP3Player::PlayPrevious(void)
 {
     mp3.write(0x7E);
     mp3.write(0xFF);
@@ -209,13 +212,13 @@ void PlayPrevious(void)
 //  return true;
 }
 
-/**************************************************************** 
+/****************************************************************
  * Function Name: PlayLoop
  * Description: Play loop for all the songs.
  * Parameters: none
  * Return: none
-****************************************************************/ 
-void PlayLoop(void)
+****************************************************************/
+void MP3Player::PlayLoop(void)
 {
     mp3.write(0x7E);
     mp3.write(0xFF);
@@ -229,13 +232,13 @@ void PlayLoop(void)
 //  return true;
 }
 
-/**************************************************************** 
+/****************************************************************
  * Function Name: SetVolume
  * Description: Set the volume, the range is 0x00 to 0x1E.
  * Parameters: volume: the range is 0x00 to 0x1E.
  * Return: none
-****************************************************************/ 
-void SetVolume(uint8_t volume)
+****************************************************************/
+void MP3Player::SetVolume(uint8_t volume)
 {
     mp3.write(0x7E);
     mp3.write(0xFF);
@@ -249,13 +252,13 @@ void SetVolume(uint8_t volume)
 //  return true;
 }
 
-/**************************************************************** 
+/****************************************************************
  * Function Name: IncreaseVolume
  * Description: Increase the volume.
  * Parameters: none
  * Return: none
-****************************************************************/ 
-void IncreaseVolume(void)
+****************************************************************/
+void MP3Player::IncreaseVolume(void)
 {
     mp3.write(0x7E);
     mp3.write(0xFF);
@@ -269,13 +272,13 @@ void IncreaseVolume(void)
 //  return true;
 }
 
-/**************************************************************** 
+/****************************************************************
  * Function Name: DecreaseVolume
  * Description: Decrease the volume.
  * Parameters: none
  * Return: none
-****************************************************************/ 
-void DecreaseVolume(void)
+****************************************************************/
+void MP3Player::DecreaseVolume(void)
 {
     mp3.write(0x7E);
     mp3.write(0xFF);
@@ -289,13 +292,13 @@ void DecreaseVolume(void)
 //  return true;
 }
 
-/**************************************************************** 
+/****************************************************************
  * Function Name: printReturnedData
  * Description: Print the returned data that sent from the Grove_Serial_MP3_Player.
  * Parameters: none
  * Return: none
-****************************************************************/ 
-void printReturnedData(void)
+****************************************************************/
+void MP3Player::printReturnedData(void)
 {
     unsigned char c;
     //check if there's any data sent from the Grove_Serial_MP3_Player
@@ -306,17 +309,17 @@ void printReturnedData(void)
         Serial.print(c, HEX);
         Serial.print(" ");
     }
-    Serial.println(" "); 
+    Serial.println(" ");
 }
 
-/**************************************************************** 
+/****************************************************************
  * Function Name: QueryPlayStatus
  * Description: Query play status.
  * Parameters: none
  * Return: 0: played out; 1: other.
  * Usage: while(QueryPlayStatus() != 0);  // Waiting to play out.
-****************************************************************/ 
-uint8_t QueryPlayStatus(void)
+****************************************************************/
+uint8_t MP3Player::QueryPlayStatus(void)
 {
     unsigned char c[10] = {0};
     uint8_t i = 0;
@@ -330,8 +333,8 @@ uint8_t QueryPlayStatus(void)
 //        Serial.print(" 0x");
 //        Serial.print(c[i], HEX);
     }
-//    Serial.println(" "); 
-    
+//    Serial.println(" ");
+
     if(c[3] == 0x3C || c[3] == 0x3D || c[3] == 0x3E)
     {
         return 0;

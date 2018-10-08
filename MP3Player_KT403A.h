@@ -7,7 +7,7 @@
  * Author     : Wuruibin
  * Created Time: Dec 2015
  * Modified Time:
- * 
+ *
  * The MIT License (MIT)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -28,29 +28,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
- 
+
 
 #ifndef __MP3PLAYER_KT403A_H__
 #define __MP3PLAYER_KT403A_H__
 
 #include <SoftwareSerial.h>
 
-extern SoftwareSerial mp3;
+class MP3Player {
+private:
+  SoftwareSerial mp3;
 
-void PlayMP3folder(uint16_t index);
-void SelectPlayerDevice(uint8_t device);
-void SpecifyMusicPlay(uint16_t index);
-void SpecifyfolderPlay(uint8_t folder, uint8_t index);
-void PlayPause(void);
-void PlayResume(void);
-void PlayNext(void);
-void PlayPrevious(void);
-void PlayLoop(void);
-void SetVolume(uint8_t volume);
-void IncreaseVolume(void);
-void DecreaseVolume(void);
-uint8_t QueryPlayStatus(void);
-void printReturnedData(void);
+public:
+  enum playerDevice {
+    UDISK,
+    SDCARD
+  };
+  MP3Player (int receivePin, int transmitPin);
+  void PlayMP3folder(uint16_t index);
+  void SelectPlayerDevice(uint8_t device);
+  void SpecifyMusicPlay(uint16_t index);
+  void SpecifyfolderPlay(uint8_t folder, uint8_t index);
+  void PlayPause(void);
+  void PlayResume(void);
+  void PlayNext(void);
+  void PlayPrevious(void);
+  void PlayLoop(void);
+  void SetVolume(uint8_t volume);
+  void IncreaseVolume(void);
+  void DecreaseVolume(void);
+  uint8_t QueryPlayStatus(void);
+  void printReturnedData(void);
+  virtual ~MP3Player ();
+};
+
+
 
 
 #endif
