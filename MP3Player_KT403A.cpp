@@ -36,11 +36,10 @@ MP3Player::MP3Player(){
 }
 
 MP3Player::~MP3Player(){
-  mp3->~SoftwareSerial();
 }
 
-void MP3Player::begin(int receivePin, int transmitPin, uint8_t playerDevice){
-  mp3 = new SoftwareSerial(receivePin,transmitPin);
+void MP3Player::begin(*SoftwareSerial mp3Port, uint8_t playerDevice){
+  mp3 = mp3Port;
   if (playerDevice != 0x00) {
     SelectPlayerDevice(playerDevice);
   }
