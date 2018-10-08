@@ -38,7 +38,7 @@ MP3Player::MP3Player(){
 MP3Player::~MP3Player(){
 }
 
-void MP3Player::begin(*SoftwareSerial mp3Port, uint8_t playerDevice){
+void MP3Player::begin(SoftwareSerial* mp3Port, uint8_t playerDevice){
   mp3 = mp3Port;
   if (playerDevice != 0x00) {
     SelectPlayerDevice(playerDevice);

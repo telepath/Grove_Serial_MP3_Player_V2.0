@@ -40,11 +40,11 @@ private:
 
 public:
   enum playerDevice {
-    UDISK,
-    SDCARD
+    UDISK = 0x01,
+    SDCARD = 0x02
   };
   MP3Player();
-  void begin(*SoftwareSerial mp3Port, uint8_t playerDevice = 0x02);
+  void begin(SoftwareSerial* mp3Port, uint8_t playerDevice = 0x02);
   int available();
   void PlayMP3folder(uint16_t index);
   void SelectPlayerDevice(uint8_t device);
