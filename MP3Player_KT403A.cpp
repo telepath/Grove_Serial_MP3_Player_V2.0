@@ -46,6 +46,9 @@ void MP3Player::begin(int receivePin, int transmitPin, uint8_t playerDevice){
   }
 }
 
+int MP3Player::available(){
+  return mp3->available();
+}
 
 /****************************************************************
  * Function Name: SelectPlayerDevice

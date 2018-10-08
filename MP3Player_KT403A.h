@@ -45,6 +45,7 @@ public:
   };
   MP3Player();
   void begin(int receivePin, int transmitPin, uint8_t playerDevice = 0x00);
+  int available();
   void PlayMP3folder(uint16_t index);
   void SelectPlayerDevice(uint8_t device);
   void SpecifyMusicPlay(uint16_t index);
