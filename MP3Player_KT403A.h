@@ -29,7 +29,6 @@
  * THE SOFTWARE.
  */
 
-
 #ifndef __MP3PLAYER_KT403A_H__
 #define __MP3PLAYER_KT403A_H__
 
@@ -37,14 +36,15 @@
 
 class MP3Player {
 private:
-  SoftwareSerial mp3;
+  SoftwareSerial* mp3;
 
 public:
   enum playerDevice {
     UDISK,
     SDCARD
   };
-  MP3Player (int receivePin, int transmitPin);
+  MP3Player();
+  void begin(int receivePin, int transmitPin, uint8_t playerDevice = 0x00);
   void PlayMP3folder(uint16_t index);
   void SelectPlayerDevice(uint8_t device);
   void SpecifyMusicPlay(uint16_t index);
@@ -61,8 +61,5 @@ public:
   void printReturnedData(void);
   virtual ~MP3Player ();
 };
-
-
-
 
 #endif
