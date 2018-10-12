@@ -42,6 +42,7 @@ void MP3Player::begin(Stream* mp3Port, uint8_t playerDevice){
   mp3 = mp3Port;
   if (playerDevice != 0x00) {
     SelectPlayerDevice(playerDevice);
+    SetVolume(0x0E);
   }
 }
 
