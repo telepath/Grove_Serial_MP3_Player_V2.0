@@ -33,17 +33,10 @@
 #include <SoftwareSerial.h>
 #include "MP3Player_KT403A.h"
 
-MP3Player::MP3Player(){
-}
-
-MP3Player::~MP3Player(){
-}
-
-void MP3Player::begin(int TxPin, int RxPin, uint8_t playerDevice){
-  mp3.pins(TxPin, RxPin);
-  mp3.begin(9600);
+void MP3Player::begin(uint8_t playerDevice){
+  SoftwareSerial::begin(9600);
   for (size_t i = 0; i < 5; i++) {
-    if (mp3.available()) {
+    if (available()) {
       if (playerDevice != 0x00) {
         SelectPlayerDevice(playerDevice);
         SetVolume(0x0E);
@@ -54,7 +47,7 @@ void MP3Player::begin(int TxPin, int RxPin, uint8_t playerDevice){
 }
 
 int MP3Player::available(){
-  return mp3.available();
+  return SoftwareSerial::available();
 }
 
 /****************************************************************
@@ -65,14 +58,14 @@ int MP3Player::available(){
 ****************************************************************/
 void MP3Player::SelectPlayerDevice(uint8_t device)
 {
-    mp3.write(0x7E);
-    mp3.write(0xFF);
-    mp3.write(0x06);
-    mp3.write(0x09);
-    mp3.write(uint8_t(0x00));
-    mp3.write(uint8_t(0x00));
-    mp3.write(device);
-    mp3.write(0xEF);
+    write(0x7E);
+    write(0xFF);
+    write(0x06);
+    write(0x09);
+    write(uint8_t(0x00));
+    write(uint8_t(0x00));
+    write(device);
+    write(0xEF);
     delay(200);
 }
 
@@ -87,14 +80,14 @@ void MP3Player::SpecifyMusicPlay(uint16_t index)
     uint8_t hbyte, lbyte;
     hbyte = index / 256;
     lbyte = index % 256;
-    mp3.write(0x7E);
-    mp3.write(0xFF);
-    mp3.write(0x06);
-    mp3.write(0x03);
-    mp3.write(uint8_t(0x00));
-    mp3.write(uint8_t(hbyte));
-    mp3.write(uint8_t(lbyte));
-    mp3.write(0xEF);
+    write(0x7E);
+    write(0xFF);
+    write(0x06);
+    write(0x03);
+    write(uint8_t(0x00));
+    write(uint8_t(hbyte));
+    write(uint8_t(lbyte));
+    write(0xEF);
     delay(10);
 //  return true;
 }
@@ -102,7 +95,7 @@ void MP3Player::SpecifyMusicPlay(uint16_t index)
 /*************************************************************
  * Function Name: PlayMP3folder
  * Description: Plays the music specified in the MP3 folder.
- *              First create a folder named mp3. Then rename the music file to 0001.mp3,0002.mp3, and so on. Save these music files in the MP3 folder.
+ *              First create a folder named  Then rename the music file to 0001.mp3,0002.mp3, and so on. Save these music files in the MP3 folder.
  *              The name must be Decimal.
  * Parameters: index, the name of MP3 flie.
  * Return: none
@@ -112,14 +105,14 @@ void MP3Player::PlayMP3folder(uint16_t index)
     uint8_t hbyte, lbyte;
     hbyte = index / 256;
     lbyte = index % 256;
-    mp3.write(0x7E);
-    mp3.write(0xFF);
-    mp3.write(0x06);
-    mp3.write(0x12);
-    mp3.write(uint8_t(0x00));
-    mp3.write(uint8_t(hbyte));
-    mp3.write(uint8_t(lbyte));
-    mp3.write(0xEF);
+    write(0x7E);
+    write(0xFF);
+    write(0x06);
+    write(0x12);
+    write(uint8_t(0x00));
+    write(uint8_t(hbyte));
+    write(uint8_t(lbyte));
+    write(0xEF);
     delay(10);
 //  return true;
 }
@@ -132,14 +125,14 @@ void MP3Player::PlayMP3folder(uint16_t index)
 ****************************************************************/
 void MP3Player::SpecifyfolderPlay(uint8_t folder, uint8_t index)
 {
-    mp3.write(0x7E);
-    mp3.write(0xFF);
-    mp3.write(0x06);
-    mp3.write(0x0F);
-    mp3.write(uint8_t(0x00));
-    mp3.write(uint8_t(folder));
-    mp3.write(uint8_t(index));
-    mp3.write(0xEF);
+    write(0x7E);
+    write(0xFF);
+    write(0x06);
+    write(0x0F);
+    write(uint8_t(0x00));
+    write(uint8_t(folder));
+    write(uint8_t(index));
+    write(0xEF);
     delay(10);
 //  return true;
 }
@@ -152,16 +145,16 @@ void MP3Player::SpecifyfolderPlay(uint8_t folder, uint8_t index)
 ****************************************************************/
 void MP3Player::PlayPause(void)
 {
-    mp3.write(0x7E);
-    mp3.write(0xFF);
-    mp3.write(0x06);
-    mp3.write(0x0E);
-    mp3.write(uint8_t(0x00));
-    mp3.write(uint8_t(0x00));
-    mp3.write(uint8_t(0x00));
-//  mp3.write(0xFE);
-//  mp3.write(0xED);
-    mp3.write(0xEF);
+    write(0x7E);
+    write(0xFF);
+    write(0x06);
+    write(0x0E);
+    write(uint8_t(0x00));
+    write(uint8_t(0x00));
+    write(uint8_t(0x00));
+//  write(0xFE);
+//  write(0xED);
+    write(0xEF);
     delay(20);
 //  return true;
 }
@@ -174,16 +167,16 @@ void MP3Player::PlayPause(void)
 ****************************************************************/
 void MP3Player::PlayResume(void)
 {
-    mp3.write(0x7E);
-    mp3.write(0xFF);
-    mp3.write(0x06);
-    mp3.write(0x0D);
-    mp3.write(uint8_t(0x00));
-    mp3.write(uint8_t(0x00));
-    mp3.write(uint8_t(0x00));
-//  mp3.write(0xFE);
-//  mp3.write(0xEE);
-    mp3.write(0xEF);
+    write(0x7E);
+    write(0xFF);
+    write(0x06);
+    write(0x0D);
+    write(uint8_t(0x00));
+    write(uint8_t(0x00));
+    write(uint8_t(0x00));
+//  write(0xFE);
+//  write(0xEE);
+    write(0xEF);
     delay(20);
 //  return true;
 }
@@ -196,14 +189,14 @@ void MP3Player::PlayResume(void)
 ****************************************************************/
 void MP3Player::PlayNext(void)
 {
-    mp3.write(0x7E);
-    mp3.write(0xFF);
-    mp3.write(0x06);
-    mp3.write(0x01);
-    mp3.write(uint8_t(0x00));
-    mp3.write(uint8_t(0x00));
-    mp3.write(uint8_t(0x00));
-    mp3.write(0xEF);
+    write(0x7E);
+    write(0xFF);
+    write(0x06);
+    write(0x01);
+    write(uint8_t(0x00));
+    write(uint8_t(0x00));
+    write(uint8_t(0x00));
+    write(0xEF);
     delay(10);
 //  return true;
 }
@@ -216,14 +209,14 @@ void MP3Player::PlayNext(void)
 ****************************************************************/
 void MP3Player::PlayPrevious(void)
 {
-    mp3.write(0x7E);
-    mp3.write(0xFF);
-    mp3.write(0x06);
-    mp3.write(0x02);
-    mp3.write(uint8_t(0x00));
-    mp3.write(uint8_t(0x00));
-    mp3.write(uint8_t(0x00));
-    mp3.write(0xEF);
+    write(0x7E);
+    write(0xFF);
+    write(0x06);
+    write(0x02);
+    write(uint8_t(0x00));
+    write(uint8_t(0x00));
+    write(uint8_t(0x00));
+    write(0xEF);
     delay(10);
 //  return true;
 }
@@ -236,14 +229,14 @@ void MP3Player::PlayPrevious(void)
 ****************************************************************/
 void MP3Player::PlayLoop(void)
 {
-    mp3.write(0x7E);
-    mp3.write(0xFF);
-    mp3.write(0x06);
-    mp3.write(0x11);
-    mp3.write(uint8_t(0x00));
-    mp3.write(uint8_t(0x00));
-    mp3.write(0x01);
-    mp3.write(0xEF);
+    write(0x7E);
+    write(0xFF);
+    write(0x06);
+    write(0x11);
+    write(uint8_t(0x00));
+    write(uint8_t(0x00));
+    write(0x01);
+    write(0xEF);
     delay(10);
 //  return true;
 }
@@ -256,14 +249,14 @@ void MP3Player::PlayLoop(void)
 ****************************************************************/
 void MP3Player::SetVolume(uint8_t volume)
 {
-    mp3.write(0x7E);
-    mp3.write(0xFF);
-    mp3.write(0x06);
-    mp3.write(0x06);
-    mp3.write(uint8_t(0x00));
-    mp3.write(uint8_t(0x00));
-    mp3.write(volume);
-    mp3.write(0xEF);
+    write(0x7E);
+    write(0xFF);
+    write(0x06);
+    write(0x06);
+    write(uint8_t(0x00));
+    write(uint8_t(0x00));
+    write(volume);
+    write(0xEF);
     delay(10);
 //  return true;
 }
@@ -276,14 +269,14 @@ void MP3Player::SetVolume(uint8_t volume)
 ****************************************************************/
 void MP3Player::IncreaseVolume(void)
 {
-    mp3.write(0x7E);
-    mp3.write(0xFF);
-    mp3.write(0x06);
-    mp3.write(0x04);
-    mp3.write(uint8_t(0x00));
-    mp3.write(uint8_t(0x00));
-    mp3.write(uint8_t(0x00));
-    mp3.write(0xEF);
+    write(0x7E);
+    write(0xFF);
+    write(0x06);
+    write(0x04);
+    write(uint8_t(0x00));
+    write(uint8_t(0x00));
+    write(uint8_t(0x00));
+    write(0xEF);
     delay(10);
 //  return true;
 }
@@ -296,14 +289,14 @@ void MP3Player::IncreaseVolume(void)
 ****************************************************************/
 void MP3Player::DecreaseVolume(void)
 {
-    mp3.write(0x7E);
-    mp3.write(0xFF);
-    mp3.write(0x06);
-    mp3.write(0x05);
-    mp3.write(uint8_t(0x00));
-    mp3.write(uint8_t(0x00));
-    mp3.write(uint8_t(0x00));
-    mp3.write(0xEF);
+    write(0x7E);
+    write(0xFF);
+    write(0x06);
+    write(0x05);
+    write(uint8_t(0x00));
+    write(uint8_t(0x00));
+    write(uint8_t(0x00));
+    write(0xEF);
     delay(10);
 //  return true;
 }
@@ -318,9 +311,9 @@ void MP3Player::printReturnedData(void)
 {
     unsigned char c;
     //check if there's any data sent from the Grove_Serial_MP3_Player
-    while(mp3.available())
+    while(available())
     {
-        c = mp3.read();
+        c = read();
         Serial.print("0x");
         Serial.print(c, HEX);
         Serial.print(" ");
@@ -340,9 +333,9 @@ uint8_t MP3Player::QueryPlayStatus(void)
     unsigned char c[10] = {0};
     uint8_t i = 0;
     //check if there's any data sent from the Grove_Serial_MP3_Player
-    while(mp3.available())
+    while(available())
     {
-        c[i] = mp3.read();
+        c[i] = read();
         i++;
 		delay(1);
 		if (i == 10) break;

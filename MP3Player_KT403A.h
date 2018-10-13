@@ -34,17 +34,15 @@
 
 #include <SoftwareSerial.h>
 
-class MP3Player {
-private:
-  SoftwareSerial mp3(0,0);
-
+class MP3Player
+      : public SoftwareSerial {
 public:
   enum playerDevice {
     UDISK = 0x01,
     SDCARD = 0x02
   };
-  MP3Player();
-  void begin(int TxPin, int RxPin, uint8_t playerDevice = 0x02);
+  MP3Player(int receivePin, int transmitPin, bool inverse_logic = false, unsigned int buffSize = 64) : SoftwareSerial(receivePin, transmitPin, inverse_logic, buffSize) {}
+  void begin(uint8_t playerDevice = 0x02);
   int available();
   void PlayMP3folder(uint16_t index);
   void SelectPlayerDevice(uint8_t device);
@@ -60,7 +58,6 @@ public:
   void DecreaseVolume(void);
   uint8_t QueryPlayStatus(void);
   void printReturnedData(void);
-  virtual ~MP3Player ();
 };
 
 #endif
