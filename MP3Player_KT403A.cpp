@@ -30,6 +30,7 @@
  */
 
 #include <Arduino.h>
+#include <SoftwareSerial.h>
 #include "MP3Player_KT403A.h"
 
 MP3Player::MP3Player(){
@@ -38,11 +39,17 @@ MP3Player::MP3Player(){
 MP3Player::~MP3Player(){
 }
 
-void MP3Player::begin(Stream* mp3Port, uint8_t playerDevice){
-  mp3 = mp3Port;
-  if (playerDevice != 0x00) {
-    SelectPlayerDevice(playerDevice);
-    SetVolume(0x0E);
+void MP3Player::begin(int TxPin, int RxPin, uint8_t playerDevice){
+  mp3 = new SoftwareSerial(TxPin, RxPin);
+  mp3->begin(9600);
+  for (size_t i = 0; i < 5; i++) {
+    if (mp3->available()) {
+      if (playerDevice != 0x00) {
+        SelectPlayerDevice(playerDevice);
+        SetVolume(0x0E);
+      }
+    }
+    delay(200);
   }
 }
 

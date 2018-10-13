@@ -36,7 +36,7 @@
 
 class MP3Player {
 private:
-  Stream* mp3;
+  SoftwareSerial* mp3;
 
 public:
   enum playerDevice {
@@ -44,7 +44,7 @@ public:
     SDCARD = 0x02
   };
   MP3Player();
-  void begin(Stream* mp3Port, uint8_t playerDevice = 0x02);
+  void begin(int TxPin, int RxPin, uint8_t playerDevice = 0x02);
   int available();
   void PlayMP3folder(uint16_t index);
   void SelectPlayerDevice(uint8_t device);
