@@ -36,7 +36,7 @@
 
 class MP3Player {
 private:
-  SoftwareSerial* mp3;
+  SoftwareSerial mp3(0,0);
 
 public:
   enum playerDevice {
