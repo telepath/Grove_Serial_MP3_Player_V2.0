@@ -50,7 +50,7 @@ int MP3Player::available(){
   if (mp3 != NULL) {
     return mp3->available();
   }
-  return false;
+  return 0;
 }
 
 /****************************************************************
