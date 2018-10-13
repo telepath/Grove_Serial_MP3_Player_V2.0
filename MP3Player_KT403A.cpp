@@ -54,10 +54,7 @@ void MP3Player::begin(int TxPin, int RxPin, uint8_t playerDevice){
 }
 
 int MP3Player::available(){
-  if (mp3 != NULL) {
-    return mp3.available();
-  }
-  return 0;
+  return mp3.available();
 }
 
 /****************************************************************
